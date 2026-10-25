@@ -7,10 +7,13 @@
 
 | Что | Где |
 |---|---|
-| Все тексты: имя, услуги, работы, шаги, контакты | `content/site.json` |
-| Картинки работ | `public/works/` (имя файла — в `works[].image` в `site.json`) |
+| Все тексты: имя, услуги, работы, шаги, цены, вопросы, контакты | `content/site.json` |
+| Цены и сроки | `pricing` в `content/site.json` (карточка с `"featured": true` выделяется цветом) |
+| Картинка-превью ссылки в мессенджерах | `app/opengraph-image.png` (1200×630), подпись — `app/opengraph-image.alt.txt` |
+| Картинки работ | `public/works/` (имя файла — в `works[].image` в `site.json`; снимок мобильной версии для телефона на первом экране — `works[].imageMobile`) |
 | Вёрстка страницы | `app/page.tsx` |
-| Цвета и шрифты | `app/globals.css`, `app/layout.tsx` |
+| Мини-иллюстрации в карточках услуг | `components/ServiceVisual.tsx` (какую показать — `services[].visual` в `site.json`) |
+| Цвета, шрифты и анимации | `app/globals.css`, `app/layout.tsx` |
 | Значок во вкладке | `app/icon.svg` |
 
 ## Как посмотреть у себя
