@@ -27,7 +27,6 @@ const serviceSpan: Record<string, string> = {
 };
 
 const telegramHandle = site.contacts.telegram.replace(/^https:\/\/t\.me\//, "@");
-const featured = site.works[0];
 
 function SectionTitle({ eyebrow, title, text }: { eyebrow: string; title: string; text?: string }) {
   return (
@@ -44,7 +43,7 @@ function SectionTitle({ eyebrow, title, text }: { eyebrow: string; title: string
   );
 }
 
-function BrowserBar({ url }: { url: string }) {
+function BrowserBar({ host }: { host: string }) {
   return (
     <div className="flex h-8 items-center gap-3 border-b border-line bg-surface px-3" aria-hidden="true">
       <span className="flex gap-1.5">
@@ -54,34 +53,36 @@ function BrowserBar({ url }: { url: string }) {
       </span>
       <span className="mx-auto flex items-center gap-1.5 rounded-md bg-surface-2 px-3 py-0.5 text-[11px] text-muted">
         <LockIcon className="size-3" />
-        {new URL(url).host}
+        {host}
       </span>
       <span className="w-[42px]" />
     </div>
   );
 }
 
-// Витрина на первом экране: окно браузера с последней работой, телефон и «живые» карточки вокруг.
-// При наведении на витрину окно и телефон плавно разворачиваются к зрителю (.showcase в globals.css).
-function HeroShowcase({ work }: { work: (typeof site.works)[number] }) {
+// Витрина на первом экране: пример сайта на компьютере и телефоне и «живые» карточки вокруг.
+// Картинки и адрес — showcase в content/site.json. При наведении окно и телефон плавно разворачиваются
+// к зрителю (.showcase в globals.css).
+function HeroShowcase() {
+  const { showcase } = site;
   return (
     <div className="showcase rise relative mx-auto w-full max-w-xl pb-6 [--d:200ms] lg:max-w-none">
       <div className="absolute inset-x-8 inset-y-10 rounded-full bg-accent/30 blur-3xl" aria-hidden="true" />
-      <a href={work.url} className="relative block" aria-label={`Открыть сайт ${work.title}`}>
+      <div className="relative">
         <div className="tilt overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl shadow-black/30">
-          <BrowserBar url={work.url} />
+          <BrowserBar host={showcase.host} />
           <Image
-            src={`${base}/works/${work.image}`}
-            alt={`Главная страница сайта ${work.title}`}
-            width={1200}
-            height={750}
+            src={`${base}/works/${showcase.image}`}
+            alt={showcase.alt}
+            width={1280}
+            height={800}
             loading="eager"
             fetchPriority="high"
             sizes="(min-width: 1024px) 640px, 100vw"
             className="h-auto w-full"
           />
         </div>
-      </a>
+      </div>
 
       <div className="float pointer-events-none absolute -left-2 top-10 [--d:-1s] sm:-left-8" aria-hidden="true">
         <div className="flex items-center gap-3 rounded-2xl border border-line bg-surface/90 p-2.5 pr-4 shadow-xl shadow-black/15 backdrop-blur-xl">
@@ -104,30 +105,28 @@ function HeroShowcase({ work }: { work: (typeof site.works)[number] }) {
         </div>
       </div>
 
-      {"imageMobile" in work && (
-        <div className="float pointer-events-none absolute -bottom-6 -right-1 w-[24%] [--d:-2.5s] sm:-right-6" aria-hidden="true">
-          {/* Телефон в 3D: боковая грань даёт толщину, корпус со статус-строкой и «островком», снимок мобильной версии, блик на стекле */}
-          <div className="phone-3d relative">
-            <span className="phone-edge" />
-            <div className="relative rounded-[1.6rem] bg-[#0b0f1c] p-[4px] shadow-2xl shadow-black/50 ring-1 ring-white/15">
-              <div className="relative overflow-hidden rounded-[1.35rem] bg-[#121212]">
-                <div className="flex aspect-[10/1] items-center justify-center">
-                  <span className="h-[46%] w-[32%] rounded-full bg-black" />
-                </div>
-                <Image
-                  src={`${base}/works/${work.imageMobile}`}
-                  alt=""
-                  width={480}
-                  height={1039}
-                  sizes="(min-width: 1024px) 170px, 25vw"
-                  className="h-auto w-full"
-                />
-                <span className="phone-glare absolute inset-0" />
+      <div className="float pointer-events-none absolute -bottom-6 -right-1 w-[24%] [--d:-2.5s] sm:-right-6" aria-hidden="true">
+        {/* Телефон в 3D: боковая грань даёт толщину, корпус со статус-строкой и «островком», снимок мобильной версии, блик на стекле */}
+        <div className="phone-3d relative">
+          <span className="phone-edge" />
+          <div className="relative rounded-[1.6rem] bg-[#0b0f1c] p-[4px] shadow-2xl shadow-black/50 ring-1 ring-white/15">
+            <div className="relative overflow-hidden rounded-[1.35rem] bg-[#121212]">
+              <div className="flex aspect-[10/1] items-center justify-center">
+                <span className="h-[46%] w-[32%] rounded-full bg-black" />
               </div>
+              <Image
+                src={`${base}/works/${showcase.imageMobile}`}
+                alt=""
+                width={480}
+                height={1039}
+                sizes="(min-width: 1024px) 170px, 25vw"
+                className="h-auto w-full"
+              />
+              <span className="phone-glare absolute inset-0" />
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -198,7 +197,7 @@ export default function Home() {
                   </a>
                 </div>
               </div>
-              {featured && <HeroShowcase work={featured} />}
+              <HeroShowcase />
             </div>
 
             <dl className="rise mt-16 grid overflow-hidden rounded-3xl border border-line bg-surface/70 backdrop-blur [--d:320ms] sm:mt-20 sm:grid-cols-3">
@@ -267,7 +266,7 @@ export default function Home() {
                   <a href={work.url} className="relative flex items-center overflow-hidden p-5 sm:p-10">
                     <div className="work-backdrop absolute inset-0" aria-hidden="true" />
                     <div className="relative w-full overflow-hidden rounded-xl border border-line bg-surface shadow-2xl shadow-black/25 transition duration-700 group-hover:-translate-y-1.5 group-hover:scale-[1.015]">
-                      <BrowserBar url={work.url} />
+                      <BrowserBar host={new URL(work.url).host} />
                       <Image
                         src={`${base}/works/${work.image}`}
                         alt={`Главная страница сайта ${work.title}`}
