@@ -207,7 +207,9 @@ export default function Home() {
                   className="flex flex-row-reverse items-baseline justify-end gap-4 border-line p-5 not-last:border-b sm:flex-col-reverse sm:items-start sm:gap-1.5 sm:p-7 sm:not-last:border-r sm:not-last:border-b-0"
                 >
                   <dt className="text-sm text-muted">{stat.label}</dt>
-                  <dd className="w-32 shrink-0 whitespace-nowrap font-display text-xl font-semibold sm:w-auto sm:text-4xl">{stat.value}</dd>
+                  <dd className="w-32 shrink-0 whitespace-nowrap font-display text-xl font-semibold sm:w-auto sm:text-[1.65rem] lg:text-4xl">
+                    {stat.value}
+                  </dd>
                 </div>
               ))}
             </dl>
